@@ -1,0 +1,95 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qabit"
+version = "0.1.0"
+description = "PyTorch-native Monte Carlo for quantitative finance."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "qabit contributors" }]
+keywords = ["quantitative-finance", "monte-carlo", "pytorch", "derivatives", "pricing"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+    "torch>=2.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7",
+    "pytest-cov",
+    "pytest-xdist",
+    "pytest-benchmark",
+]
+docs = [
+    "sphinx>=7",
+    "furo",
+    "sphinx-autodoc-typehints",
+    "myst-parser",
+]
+dev = [
+    "ruff",
+]
+
+[project.urls]
+Documentation = "https://qabit.gitlab.io/qabit"
+Repository = "https://gitlab.com/qabit/qabit"
+Changelog = "https://gitlab.com/qabit/qabit/-/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qabit"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/qabit",
+    "tests",
+    "docs",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "pyproject.toml",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["notebooks", "docs/_build"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E501",  # line length is enforced by formatter only
+    "F821",  # forward references in string annotations resolve at runtime
+    "F841",  # pre-existing unused locals in third-party-style algorithm code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E501"]
+"examples/**" = ["E501"]
+"src/qabit/__init__.py" = ["F401", "E402"]
+"src/qabit/**/__init__.py" = ["F401"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: slow tests",
+    "gpu: requires CUDA",
+]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]

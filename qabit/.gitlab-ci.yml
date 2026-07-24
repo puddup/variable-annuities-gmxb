@@ -1,0 +1,38 @@
+stages: [lint, test, docs]
+
+default:
+  image: python:3.11
+
+cache:
+  paths: [.cache/pip]
+
+lint:
+  stage: lint
+  script:
+    - pip install ruff
+    - ruff check src/
+    - ruff format --check src/
+
+test:
+  stage: test
+  script:
+    - pip install -e ".[test]"
+    - pytest -m "not slow" --cov=qabit --cov-report=term -n auto
+  coverage: '/^TOTAL.+ ([0-9]{1,3})%/'
+
+test-slow:
+  stage: test
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - pip install -e ".[test]"
+    - pytest -m slow
+
+docs:
+  stage: docs
+  script:
+    - pip install -e ".[docs]"
+    - sphinx-build -W docs/ public/
+  artifacts:
+    paths: [public]
+  only: [main]
