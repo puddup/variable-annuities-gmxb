@@ -33,7 +33,6 @@ third.**
 
 > Train one deep hedge on a calibrated VA world (Heston vol, Vasicek rates, stochastic
 > mortality), freeze it, and evaluate under shifted worlds. The hedged-P&L surfaces are a
-> decision-grade map of model risk — and the floor type is a gamma-management choice, not a
-> pricing detail.
+> decision-grade map of model risk.
 
 ---
